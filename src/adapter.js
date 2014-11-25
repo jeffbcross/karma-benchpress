@@ -18,7 +18,7 @@ BPAdapter.prototype.newWindow = function(config, done) {
   var timer = setInterval(checkClosed.bind(this), 50);
   var result;
   this._benchWindow = this._global.open(
-    annotateUrl(config),
+    serializeConfig(config),
     'benchpress',
     [
       'status=0',
@@ -68,10 +68,12 @@ if (!window.__runningBenchPressAdapterSpec__) {
   window.__bpAdapter__ = new BPAdapter(window);
 }
 else {
+  //expose private fns for testing
   window.BPAdapter = BPAdapter;
+  window.serializeConfig = serializeConfig;
 }
 
-function annotateUrl(config) {
+function serializeConfig(config) {
   var urlParts = /([^\?^\#]*)([^\#]*)(.*)/.exec(config.url);
   urlParts.shift();
   //serialize config to search
