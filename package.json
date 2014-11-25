@@ -4,7 +4,7 @@
   "description": "Karma plugin to run angular-benchpress benchmarks.",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "jasmine-node test/node"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,11 @@
   "bugs": {
     "url": "https://github.com/jeffbcross/karma-benchpress/issues"
   },
-  "homepage": "https://github.com/jeffbcross/karma-benchpress"
+  "homepage": "https://github.com/jeffbcross/karma-benchpress",
+  "devDependencies": {
+    "jasmine-node": "~1.14.5",
+    "karma": "~0.12.25",
+    "karma-jasmine": "~0.2.3",
+    "karma-chrome-launcher": "~0.1.5"
+  }
 }
