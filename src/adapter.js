@@ -59,7 +59,6 @@ BPAdapter.prototype.runBenchmark = function(config) {
       catch(e) {
         console.error('could not resolve', e);
       }
-
     });
   });
 };
@@ -76,13 +75,15 @@ else {
 function serializeConfig(config) {
   var urlParts = /([^\?^\#]*)([^\#]*)(.*)/.exec(config.url);
   urlParts.shift();
+
   //serialize config to search
-  urlParts[1] += (urlParts.length ? '&' : '') + '__bpAutoClose__=true';
-  Object.keys(config).forEach(function(prop) {
+  urlParts[1] += (urlParts[1].length ? '&' : '?') + '__bpAutoClose__=true';
+  Object.keys(config).sort().forEach(function(prop) {
     if (ignoredProps.indexOf(prop) > -1) return;
     urlParts[1] += '&' + prop + '=' + config[prop];
   });
-  return urlParts[0] + '?' + urlParts[1] + '#' + urlParts[2];
+
+  return urlParts[0] + urlParts[1] + urlParts[2];
 }
 
 }());

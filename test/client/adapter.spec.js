@@ -30,4 +30,49 @@ describe('adapter', function() {
   describe('.bpSuite()', function() {
 
   });
+
+  describe('.newWindow()', function() {
+
+  });
+
+  describe('.closeWindow()', function() {
+
+  });
+
+  describe('serializeConfig()', function() {
+    var sampleConfig;
+
+    beforeEach(function() {
+      sampleConfig = {url: 'index-auto.html'};
+    });
+
+    it('should add __bpAutoClose__=true to config.url', function() {
+      expect(serializeConfig(sampleConfig)).toBe('index-auto.html?__bpAutoClose__=true');
+    });
+
+
+    it('should preserve search portion of config', function() {
+      sampleConfig.url = 'index-auto.html?foo=bar'
+      expect(serializeConfig(sampleConfig)).toBe('index-auto.html?foo=bar&__bpAutoClose__=true')
+    });
+
+
+    it('should keep hash in place', function() {
+      sampleConfig.url += '#foobar';
+      expect(serializeConfig(sampleConfig)).toBe('index-auto.html?__bpAutoClose__=true#foobar')
+    });
+
+
+    it('should serialize config properties into search params', function() {
+      sampleConfig.iterations = 10;
+      sampleConfig.numSamples = 5;
+      sampleConfig.angular = 'angular.js';
+      expect(serializeConfig(sampleConfig)).toBe('index-auto.html?__bpAutoClose__=true&angular=angular.js&iterations=10&numSamples=5');
+    });
+
+
+    it('should ignore reserved/ignored properties of config', function() {
+      expect(serializeConfig(sampleConfig)).not.toContain('url=index-auto.html');
+    });
+  });
 });
