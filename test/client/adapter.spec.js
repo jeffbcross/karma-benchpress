@@ -5,7 +5,8 @@ describe('adapter', function() {
     globalMock = {
       __karma__: {
         complete: jasmine.createSpy('karmaComplete')
-      }
+      },
+      close: jasmine.createSpy('window.close')
     }
   });
 
@@ -36,7 +37,28 @@ describe('adapter', function() {
   });
 
   describe('.closeWindow()', function() {
+    var bp;
 
+    beforeEach(function() {
+      bp = new BPAdapter(globalMock);
+    });
+
+    it('should call close() on the window if present', function() {
+      var spy = jasmine.createSpy('close');
+      bp._benchWindow = {close: spy};
+      bp.closeWindow();
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should delete the window from the adapter object', function() {
+      bp._benchWindow = {close: function(){}};
+      bp.closeWindow();
+      expect(bp._benchWindow).toBeUndefined();
+    });
+
+    it('should not throw if no window present', function() {
+      expect(bp.closeWindow).not.toThrow();
+    });
   });
 
   describe('serializeConfig()', function() {
