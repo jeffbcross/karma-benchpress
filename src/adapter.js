@@ -68,7 +68,7 @@ if (!window.__runningBenchPressAdapterSpec__) {
   window.__bpAdapter__ = new BPAdapter(window);
 }
 else {
-  console.log('window.__runningBenchPressAdapterSpec__ truthy')
+  window.BPAdapter = BPAdapter;
 }
 
 function annotateUrl(config) {
