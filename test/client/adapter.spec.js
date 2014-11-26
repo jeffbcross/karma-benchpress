@@ -39,7 +39,24 @@ describe('adapter', function() {
 
 
   describe('.bpSuite()', function() {
+    var bp;
 
+    beforeEach(function() {
+      bp = new BPAdapter(globalMock);
+    });
+
+    it('should be added to the window object', function() {
+      expect(typeof globalMock.bpSuite).toBe('function');
+    });
+
+
+    it('should call runBenchmark with the provided config and proper context', function() {
+      var fakeConfig = {};
+      spyOn(bp, 'runBenchmark');
+      globalMock.bpSuite(fakeConfig);
+      expect(bp.runBenchmark).toHaveBeenCalledWith(fakeConfig);
+      expect(bp.runBenchmark.calls.all()[0].object).toBe(bp);
+    });
   });
 
   describe('.newWindow()', function() {
