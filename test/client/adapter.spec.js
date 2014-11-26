@@ -34,7 +34,31 @@ describe('adapter', function() {
 
 
   describe('.runBenchmark()', function() {
+    var bp, sampleConfig;
 
+    beforeEach(function() {
+      sampleConfig = {url: 'test/index-auto.html'};
+      bp = new BPAdapter(globalMock);
+    });
+
+    it('should return a promise', function() {
+      expect(typeof bp.runBenchmark(sampleConfig).then).toBe('function');
+    });
+
+
+    it('should call closeWindow()', function() {
+      spyOn(bp, 'closeWindow');
+      bp.runBenchmark(sampleConfig);
+      expect(bp.closeWindow).toHaveBeenCalled();
+    });
+
+
+    it('should call newWindow() with config and callback', function() {
+      spyOn(bp, 'newWindow');
+      bp.runBenchmark(sampleConfig);
+      expect(bp.newWindow.calls.argsFor(0)[0]).toBe(sampleConfig);
+      expect(typeof bp.newWindow.calls.argsFor(0)[1]).toBe('function');
+    });
   });
 
 
