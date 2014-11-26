@@ -1,13 +1,23 @@
 
 describe('adapter', function() {
-  var globalMock;
+  var globalMock, winAddEventListenerSpy, windowCloseGetterSpy, childWindow;
   beforeEach(function() {
+    winAddEventListenerSpy = jasmine.createSpy('addEventListener');
+    windowCloseGetterSpy = jasmine.createSpy('windowCloseGetterSpy').and.returnValue(true);
     globalMock = {
       __karma__: {
         complete: jasmine.createSpy('karmaComplete')
       },
-      close: jasmine.createSpy('window.close')
-    }
+      open: function() {
+        childWindow = {
+          addEventListener: winAddEventListenerSpy
+        };
+        childWindow.__defineGetter__('closed', windowCloseGetterSpy);
+
+        return childWindow;
+      },
+      clearInterval: jasmine.createSpy('clearInterval')
+    };
   });
 
 
@@ -33,8 +43,49 @@ describe('adapter', function() {
   });
 
   describe('.newWindow()', function() {
+    var bp, done, sampleConfig;
 
+    beforeEach(function() {
+      sampleConfig = {url: 'foo/bar'};
+      done = jasmine.createSpy('done');
+      jasmine.clock().install();
+      bp = new BPAdapter(globalMock);
+    });
+
+    afterEach(function() {
+      jasmine.clock().uninstall();
+    });
+
+    it('should open a new window with correct parameters', function() {
+      spyOn(globalMock, 'open').and.callThrough();
+      bp.newWindow(sampleConfig, done);
+      expect(globalMock.open).toHaveBeenCalledWith(
+        serializeConfig(sampleConfig),
+        'benchpress',
+        'status=0&menubar=0&toolbar=0&location=0&personalbar=0&status=0&dependent=0&dialog=0');
+    });
+
+
+    it('should add a listener for results from the child window', function() {
+      bp.newWindow(sampleConfig, done);
+      expect(childWindow.addEventListener.calls.argsFor(0)[0]).toBe('benchpressComplete');
+    });
+
+
+    it('should check if the child window is closed every 50 ms', function() {
+      bp.newWindow(sampleConfig, done);
+      jasmine.clock().tick(50);
+      expect(windowCloseGetterSpy).toHaveBeenCalled();
+    });
+
+
+    it('should clear the interval if the child window is closed', function() {
+      bp.newWindow(sampleConfig, done);
+      jasmine.clock().tick(50);
+      expect(globalMock.clearInterval).toHaveBeenCalledWith(1);
+    });
   });
+
 
   describe('.closeWindow()', function() {
     var bp;

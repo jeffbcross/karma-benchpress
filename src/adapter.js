@@ -37,7 +37,7 @@ BPAdapter.prototype.newWindow = function(config, done) {
 
   function checkClosed() {
     if (!this._benchWindow || this._benchWindow.closed) {
-      clearInterval(timer);
+      this._global.clearInterval(timer);
       done(result);
     }
   }
