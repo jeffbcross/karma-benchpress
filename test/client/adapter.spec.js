@@ -108,7 +108,9 @@ describe('adapter', function() {
     });
 
     it('should not throw if no window present', function() {
-      expect(bp.closeWindow).not.toThrow();
+      expect(function() {
+        bp.closeWindow();
+      }).not.toThrow();
     });
   });
 

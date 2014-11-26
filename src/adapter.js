@@ -1,4 +1,5 @@
 (function() {
+'use strict'
 
 //Config properties not to serialize to url
 var ignoredProps = ['url'];
