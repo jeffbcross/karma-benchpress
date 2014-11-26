@@ -5,8 +5,6 @@
 var ignoredProps = ['url'];
 
 function BPAdapter (global) {
-  var self = this;
-  this.benchmarks = [];
   this._global = global;
   global.bpSuite = this.bpSuite.bind(this);
 }
