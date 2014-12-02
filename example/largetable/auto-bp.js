@@ -119,7 +119,7 @@ AutoRunner.prototype.runBenchmark = function(config) {
   }.bind(this), null, function() {
     if (this._runState.headless === true) {
       var benchpressComplete = new Event('benchpressComplete');
-      benchpressComplete.result = this._runState.recentResult;
+      benchpressComplete.result = this.stats;
       this._globals._window.dispatchEvent(benchpressComplete);
       this._globals._window.close();
     }
