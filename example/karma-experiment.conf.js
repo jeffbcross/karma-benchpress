@@ -61,8 +61,19 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
-
+    browsers: ['ChromeCanaryPerf'],
+    customLaunchers: {
+        ChromeCanaryPerf: {
+            base: 'ChromeCanary',
+            flags: [
+                '--enable-memory-info ',
+                '--enable-precise-memory-info ',
+                '--enable-memory-benchmarking ',
+                '--js-flags="--expose-gc"',
+                '-incognito'
+            ]
+        }
+    },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
